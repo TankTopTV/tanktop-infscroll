@@ -25,7 +25,7 @@ Or you can just clone the Git repo.
 Dependencies
 ------------
 
-You'll need jQuery.
+You'll need [jQuery](http://jquery.com) and [jsRender](https://github.com/BorisMoore/jsrender).
 
 
 Background
@@ -33,10 +33,10 @@ Background
 
 To see the mosaic scroll in action, check out these examples: 
 
- * Example scroll code in this project
+ * Example scroll code in this project (TODO!!)
  * Tank Top Movies (http://movies.tanktop.tv)
 
-I presented about this at Hacker News London in March 2013 - if you'd like to know more about why we built this and what it can do, check out the video and slides here: http://blog.tanktop.tv/2013/03/to-infinity-and-beyond.html
+I presented about this at Hacker News London in February 2013 - if you'd like to know more about why we built this and what it can do, check out the video and slides here: http://blog.tanktop.tv/2013/03/to-infinity-and-beyond.html
 
 Usage
 -----

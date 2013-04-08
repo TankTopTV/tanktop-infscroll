@@ -1,4 +1,10 @@
-
+/* 
+ * tanktop-utils - utilities for rendering variable mosaics by Tank Top TV
+ * 
+ * Copyright 2012-3 Tank Top TV Ltd
+ * 
+ * Licensed under the Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 var tanktop = tanktop || {};
 tanktop.utils = (function() {
