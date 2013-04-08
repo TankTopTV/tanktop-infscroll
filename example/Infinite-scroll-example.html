@@ -1,0 +1,129 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/jquery.js"></script>		
+		<script type="text/javascript" src="../js/jsrender.js"></script>
+		<script type="text/javascript" src="../js/tanktop-utils.js"></script>
+		<script type="text/javascript" src="../js/tanktop-infscroll.js"></script>	
+	</head>
+	<body>
+		<p id="loading_message"></p>
+		<ul id="moving-container">
+			<!-- Moving tiles are loaded here  -->
+		</ul>
+		<ul id="fixed-container">
+			<!--  Fixed tiles are loaded here -->
+		</ul>
+		
+	</body>
+</html>
+
+<script type="text/javascript">
+var moving_url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=tanktoptv&count=8";
+var moving_field = "";
+var fixed_url = "http://placekitten.com/300/200";
+var fixed_field = "";
+
+var num_moving_blocks = 8;
+var num_fixed_blocks = 1;
+var moving_lefts = [0, 300, 600, 0, 600, 0, 300, 600];
+var moving_tops = [0, 0, 0, 200, 200, 400, 400, 400];
+var fixed_lefts = [300,];
+var fixed_tops = [200];
+var fewer_lefts = [0, 152, 304, 456, 608, 760, 0, 152, 304, 456, 608, 760, 0, 152, 304, 456];
+var fewer_tops = [0, 0, 0, 0, 0, 0, 217, 217, 217, 217, 217, 217, 434, 434, 434, 434];
+var page_height = 705;
+var fewer_limit = 12;
+var truncate = [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4];
+
+function doAfterLoading(data) {
+	// A function that gets called every time a page of data gets loaded
+	console.log("Data loaded");
+}
+
+function doOnCompletion(data) {
+	// A function that gets called when there is no more data left to display
+	console.log("All data loaded");
+}
+
+function getLeft(index, num_blocks, lefts) {	
+	// Return x co-ordinate of the block with the given index
+	// num_blocks - number of blocks of this type (fixed or moving)
+	// moving - true if these are the moving blocks
+	var block = Math.floor(index/num_blocks);
+	var item = index - (block * num_blocks);
+	return lefts[item];
+}
+
+function getTop(index, num_blocks, tops) {
+	// Return y co-ordinate of the block with the given index
+	var block = Math.floor(index/num_blocks);
+	var item = index - (block * num_blocks);
+	return block * page_height + tops[item];
+}
+
+function getUrlParameter(name) {
+	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+
+$(document).ready(function() {
+
+        $("#loading_message").html("Loading contents...");
+
+	    var current_page = getUrlParameter('page');
+		console.log("Starting from page " + current_page);		
+
+		$(window).infscroll({
+	        pageHeight: page_height,
+	        completion: doOnCompletion,
+            current_page: 0,
+            after_loading: doAfterLoading,
+			moving_tiles : {
+				url: moving_url,
+	        	target: "#moving-container",
+	            template: "moving-mosaic.html",
+		        jsonField: moving_field,
+		        numberToLoad: num_moving_blocks,
+				helpers : {
+					left: function(index) {
+						return getLeft(index, num_moving_blocks, moving_lefts);
+					},
+					top: function(index) {
+						return getTop(index, num_moving_blocks, moving_tops);
+					},		
+				}	
+			},
+			fixed_tiles : {
+				url: fixed_url,
+	        	target: "#fixed-container",
+	            template: "fixed-mosaic.html",
+		        jsonField: fixed_field,			
+		        numberToLoad: num_fixed_blocks,
+				helpers : {
+					left: function(index) {
+						return getLeft(index, num_fixed_blocks, fixed_lefts);
+					},
+					top: function(index) {
+						return getTop(index, num_fixed_blocks, fixed_tops);
+					},	
+					truncate: function(main_blocks_length) {
+						return truncate[main_blocks_length];
+					}
+				}				
+			},
+			fewer_tiles : {
+				limit : fewer_limit, 
+				extra_class : "standard-block",
+				target : ".movie-container",
+				helpers : {
+					left: function(index) {
+						return getLeft(index, fewer_limit, fewer_lefts); 
+					},
+					top: function(index) {
+						return getTop(index, fewer_limit, fewer_tops); 
+					}
+				}
+			}
+		});
+});		
+		
+</script>		
