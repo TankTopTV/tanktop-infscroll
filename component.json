@@ -1,0 +1,8 @@
+{
+  "name": "tanktop-infscroll",
+  "version": "0.0.0",
+  "main": ["js/tanktop-infscroll.js","js/tanktop-utils.js"],
+  "dependencies": {
+    "jquery": "~1.8.0"
+  },
+}
