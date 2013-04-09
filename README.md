@@ -33,14 +33,15 @@ Background
 
 To see the mosaic scroll in action, check out these examples: 
 
- * Example scroll code in this project (TODO!!)
+ * Example scroll code in this project
  * Tank Top Movies (http://movies.tanktop.tv)
+ * Add your example here! 
 
 I presented about this at Hacker News London in February 2013 - if you'd like to know more about why we built this and what it can do, check out the video and slides here: http://blog.tanktop.tv/2013/03/to-infinity-and-beyond.html
 
-Usage
------
+Example
+-------
 
-See the example for now.  Oh, wait, I haven't written it yet! 
+There is a simple Django application example in the infscroll directory.  Note that for this to execute correctly you'll need to install the infinite scroll js directory underneath infscroll/static.  
 
 Copyright 2012-13 Tank Top TV Ltd
