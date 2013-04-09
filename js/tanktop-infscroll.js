@@ -173,15 +173,25 @@
             data.loading = true;
             $("#loading").show();
             
-            $.when(load_data(data.loadDown, data.moving_tiles), load_data(data.loadDown, data.fixed_tiles))
-            .done(function(main_data, fixed_data) {
-            	main_data_0 = main_data && main_data[0];
-            	fixed_data_0 = fixed_data && fixed_data[0];
-            	render_data(data, main_data_0, fixed_data_0);
-            })
-            .fail(function(x) {
-            	console.log("Something went wrong");            
-            });
+            $.when(data.moving_tiles.settings.load_data_fn(data.loadDown, data.moving_tiles), 
+                   data.fixed_tiles.settings.load_data_fn(data.loadDown, data.fixed_tiles))
+            .then(function(main_data, fixed_data) { // each of these returns jqXHR, need to get the data out
+                        main_data_0 = main_data && main_data[0];
+                        fixed_data_0 = fixed_data && fixed_data[0];
+                        render_data(data, main_data_0, fixed_data_0);
+                        // render_data(data, main_data, fixed_data);
+                    }, 
+                function(jqXHR, textStatus, errorThrown) { // fail
+                        console.log("something went wrong");
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                   },
+                function(p) { // progress
+                        console.log("progress");
+                        console.log(p);
+                }
+            );
         }
     };
 
@@ -197,22 +207,24 @@
                     base_params: { json : true }, // params to be supplied to the
                     start_param: 'start',
                     count_param: 'count',
-                    jsonField: null, // JSON field containing array of items to load	
+                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.   
                     target: null, // selector of element to add to 
                     template: null, // JSRender template for each tile
-                    numberToLoad: 16, // Number of tiles of this type per page           				
+                    numberToLoad: 16, // Number of tiles of this type per page                          
                     helpers: {}, // helper functions
-    			},
+                    load_data_fn : load_data,
+                },
                 fixed_tiles: {
                     url: document.location.href, // URL for data feed
                     base_params: { json : true }, // params to be supplied to the
                     start_param: 'start',
                     count_param: 'count',
-                    jsonField: null, // JSON field containing array of items to load	
+                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.   
                     target: null, // selector of element to add to 
                     template: null, // JSRender template for each tile
-                    numberToLoad: 16, // Number of tiles of this type per page           				
-                    helpers: {}, // helper functions                	
+                    numberToLoad: 16, // Number of tiles of this type per page                          
+                    helpers: {}, // helper functions
+                    load_data_fn : load_data,
                 },
                 fewer_tiles: {},
                 current_page: 0,
