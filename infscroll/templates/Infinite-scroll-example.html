@@ -21,23 +21,26 @@
 </html>
 
 <script type="text/javascript">
-var moving_url = "http://api.twitter.com/1/statuses/user_timeline.json";
+// We don't set the URLs for moving or fixed blocks, because in this example we are faking the responses
 var moving_url = "";
 var moving_field = 'thing';
-var fixed_url = null; //"http://placekitten.com/300/200";
+var fixed_url = "";
 var fixed_field = 'thing';
 
+// Layout for the blocks.  There are 8 moving blocks surrounding one fixed block in the middle. 
 var num_moving_blocks = 8;
 var num_fixed_blocks = 1;
 var moving_lefts = [0, 300, 600, 0, 600, 0, 300, 600];
 var moving_tops = [0, 0, 0, 200, 200, 400, 400, 400];
 var fixed_lefts = [300,];
 var fixed_tops = [200];
-var fewer_lefts = [0, 152, 304, 456, 608, 760, 0, 152, 304, 456, 608, 760, 0, 152, 304, 456];
-var fewer_tops = [0, 0, 0, 0, 0, 0, 217, 217, 217, 217, 217, 217, 434, 434, 434, 434];
 var page_height = 600;
-var fewer_limit = 12;
-var truncate = [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4];
+
+// We never use fewer or truncate in this example
+var fewer_limit = 10;
+var fewer_lefts = [0, 0, 0];
+var fewer_tops = [0, 0, 0];
+var truncate = [0, 2, 2];
 
 function doAfterLoading(data) {
 	// A function that gets called every time a page of data gets loaded
@@ -65,60 +68,13 @@ function getTop(index, num_blocks, tops) {
 	return block * page_height + tops[item];
 }
 
+// In this example we use this to get the page parameter from the URL.  In practice we load the same data for every page in this example. 
 function getUrlParameter(name) {
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 }
 
-function load_non_json_data(loadDown, tiles) {
-	console.log("Loading down? " + loadDown);
-	if ((tiles == null) || (tiles.settings.numberToLoad == 0)) {
-		console.log("No data to load");
-		return
-	}
-	
-	var start = loadDown ? tiles.maxLoaded : tiles.minLoaded - tiles.settings.numberToLoad;    	
-	console.log("Loading non JSON from " + start);
-	
-    //return $.get(tiles.settings.url);     	
-    return $.get({
-        url: tiles.settings.url,
-        error: function(j, e, t){
-            alert('error' + j + e + t);
-        }
-    });
-
-}
-
-function load_twitter(loadDown, tiles) {
-	console.log("Loading down? " + loadDown);
-	if ((tiles == null) || (tiles.settings.numberToLoad == 0)) {
-		console.log("No data to load");
-		return
-	}
-	
-	var start = loadDown ? tiles.maxLoaded : tiles.minLoaded - tiles.settings.numberToLoad;    	
-	console.log("Loading from " + start);
-	var page = Math.floor(start / tiles.settings.numberToLoad);
-
-	var params = { 'include_entities' : true, 'screen_name' :'tanktoptv', 'count' : tiles.settings.numberToLoad, 'page' : page, 'per_page' :  tiles.settings.numberToLoad };
-	
-    return $.getJSON(tiles.settings.url, params).fail(function(j, e, t) {
-    	console.log(j + e + t);
-    });    	
-
-	return $.ajax({
-        url: tiles.settings.url,
-        data: params,
-        type: 'GET',
-        dataType: 'text',
-        beforeSend: setHeader,
-        error: function(j, e, t){
-            alert('error');
-        }
-    });
-
-}
-
+// This is faking up a json response for the sake of the example.  
+// For real life usage, set the URLs for fixed and moving blocks, and don't specify a load_data_fn in the settngs for infscroll
 function fake_json(loadDown, tiles) {
 	var json_thing = '{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv", "logo" : "{% static 'images/TankTopMovies.png' %}"}';
 	var json_multiple_things = Array( num_moving_blocks ).join(json_thing + ",");
@@ -128,12 +84,9 @@ function fake_json(loadDown, tiles) {
 	return [data_obj, "success", "some response text would go here"];
 }
 
-function fake_other_json(loadDown, tiles) {
-	data_obj = JSON.parse('{"thing" : [{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv"}, {"name" : "Tank Top TV", "site" : "www.tanktop.tv"},{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv"}, {"name" : "Tank Top TV", "site" : "www.tanktop.tv"},{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv"}, {"name" : "Tank Top TV", "site" : "www.tanktop.tv"},{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv"}, {"name" : "Tank Top TV", "site" : "www.tanktop.tv"},{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv"}, {"name" : "Tank Top TV", "site" : "www.tanktop.tv"}]}'); 
-	return [data_obj, "success", "some response text would go here"];
-}
-
 $(document).ready(function() {
+
+	// Handling the click to remove a moving block
 	$(document).on("click", '.remove', function(e){
 		e.stopPropagation();
 		console.log("Removing a block");
@@ -146,6 +99,7 @@ $(document).ready(function() {
 		});
 	})
 	.on("items-removed", ".container", function() {
+		// when a block has been removed we shuffle all the moving blocks back one place
 		$(".moving").each(function(index) {
 			var $this = $(this);
 			$this.css({"left": getLeft(index, num_moving_blocks, moving_lefts), "top": getTop(index, num_moving_blocks, moving_tops)});
@@ -182,7 +136,7 @@ $(document).ready(function() {
 					return index;
 				}
 			},
-			load_data_fn: fake_json,
+			load_data_fn: fake_json, // remove this if you want to load real JSON
 		},
 		fixed_tiles : {
 			url: fixed_url,
@@ -201,12 +155,12 @@ $(document).ready(function() {
 					return truncate[main_blocks_length];
 				}
 			},				
-			load_data_fn: fake_json,
+			load_data_fn: fake_json, // remove this if you want to load real JSON
 		},
-		fewer_tiles : {
+		fewer_tiles : {  // in practice we don't use this in the example
 			limit : fewer_limit, 
 			extra_class : "standard-block",
-			target : ".movie-container",
+			target : ".container",
 			helpers : {
 				left: function(index) {
 					return getLeft(index, fewer_limit, fewer_lefts); 
