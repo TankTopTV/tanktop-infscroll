@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{{for #data}}
+<li id="{{>~block_index(item_index)}}" class="scroll_block moving" style="left:{{>~left(item_index)}}px; top:{{>~top(item_index)}}px;">
+  <div class="thing">  
+  	<a class="remove">x</a>
+    <p class="text"><a href="http://{{>site}}">{{>name}} {{:#index}}</a></p>
+  </div>
+</li>
+{{/for}}
