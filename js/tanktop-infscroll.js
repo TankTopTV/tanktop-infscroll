@@ -35,10 +35,9 @@
     }
     
     function render_data(data, json, fixed_json) {
-    	var do_fixed = data.fixed_tiles && fixed_json && fixed_json[data.fixed_tiles.settings.jsonField];
-    	
-        var moving_items = json[data.moving_tiles.settings.jsonField];
-        
+    	var do_fixed = data.fixed_tiles && fixed_json;
+        var moving_items = (data.moving_tiles.settings.jsonField && json[data.moving_tiles.settings.jsonField]) || json;
+
         setLoadedLimits(data.loadDown, data.moving_tiles, moving_items.length);
         
         if (moving_items.length < data.moving_tiles.settings.numberToLoad) {
@@ -47,7 +46,7 @@
 
         var fixed_items = null;
         if (do_fixed) {
-            fixed_items = fixed_json[data.fixed_tiles.settings.jsonField];
+            fixed_items = (data.fixed_tiles.settings.jsonField && fixed_json[data.fixed_tiles.settings.jsonField]) || fixed_json;
 
             // If we have loaded all the main items, we might need to truncate the small blocks
             if (data.loadComplete) {
@@ -130,7 +129,7 @@
         return  	        
     }
     
-    function load_data(loadDown, tiles) {
+    var load_data = function load_json_data(loadDown, tiles) {
     	if ((tiles == null) || (tiles.settings.numberToLoad == 0)) {
     		console.log("No data to load");
     		return
@@ -293,8 +292,10 @@
 				// Initial load
 				data.moving_tiles.minLoaded = data.moving_tiles.settings.numberToLoad * data.current_page;
 				data.moving_tiles.maxLoaded = data.moving_tiles.settings.numberToLoad * data.current_page;
-				data.fixed_tiles.minLoaded = data.fixed_tiles.settings.numberToLoad * data.current_page;
-				data.fixed_tiles.maxLoaded = data.fixed_tiles.settings.numberToLoad * data.current_page;					
+                if (data.fixed_tiles) {
+                    data.fixed_tiles.minLoaded = data.fixed_tiles.settings.numberToLoad * data.current_page;
+                    data.fixed_tiles.maxLoaded = data.fixed_tiles.settings.numberToLoad * data.current_page;                                        
+                }
 
 				load(data);   
             });
