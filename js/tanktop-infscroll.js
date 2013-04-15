@@ -1,4 +1,4 @@
-/* 
+/*
  * tanktop-infscroll - an infinite scroll supporting variable mosaics by Tank Top TV
  *
  * Copyright 2012-3 Tank Top TV Ltd
@@ -124,7 +124,6 @@
             }
 
             check_for_more(data);
-
         });
         return;
     }
@@ -209,10 +208,10 @@
                     }, // params to be supplied to the
                     start_param: 'start',
                     count_param: 'count',
-                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.   
-                    target: null, // selector of element to add to 
+                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.
+                    target: null, // selector of element to add to
                     template: null, // JSRender template for each tile
-                    numberToLoad: 16, // Number of tiles of this type per page                          
+                    numberToLoad: 16, // Number of tiles of this type per page
                     helpers: {}, // helper functions
                     load_data_fn: load_data
                 },
@@ -223,16 +222,17 @@
                     }, // params to be supplied to the
                     start_param: 'start',
                     count_param: 'count',
-                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.   
-                    target: null, // selector of element to add to 
+                    jsonField: null, // JSON field containing array of items to load.  If left null, expect a JSON array.
+                    target: null, // selector of element to add to
                     template: null, // JSRender template for each tile
-                    numberToLoad: 16, // Number of tiles of this type per page                          
+                    numberToLoad: 16, // Number of tiles of this type per page
                     helpers: {}, // helper functions
                     load_data_fn: load_data
                 },
                 fewer_tiles: {},
                 current_page: 0,
-                after_load: function() {}
+                doAfterFirstLoad: function() {},
+                doAfterEachLoad: function() {}
             }, options);
 
             return this.each(function() {

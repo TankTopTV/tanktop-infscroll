@@ -1,10 +1,10 @@
 <html>
 	<head>
 {% load staticfiles %}
-		<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>		
+		<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/jsrender.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/tanktop-utils.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/tanktop-infscroll.js' %}"></script>	
+		<script type="text/javascript" src="{% static 'js/tanktop-infscroll.js' %}"></script>
 		<link href="{% static "css/infscroll.css" %}" rel="stylesheet"></link>
 	</head>
 	<body>
@@ -16,7 +16,7 @@
 		</ul>
 		<div id="loading">
 			<p id="loading_message"></p>
-		</div>		
+		</div>
 	</body>
 </html>
 
@@ -27,7 +27,7 @@ var moving_field = 'thing';
 var fixed_url = "";
 var fixed_field = 'thing';
 
-// Layout for the blocks.  There are 8 moving blocks surrounding one fixed block in the middle. 
+// Layout for the blocks.  There are 8 moving blocks surrounding one fixed block in the middle.
 var num_moving_blocks = 8;
 var num_fixed_blocks = 1;
 var moving_lefts = [0, 300, 600, 0, 600, 0, 300, 600];
@@ -52,7 +52,7 @@ function doOnCompletion(data) {
 	console.log("All data loaded");
 }
 
-function getLeft(index, num_blocks, lefts) {	
+function getLeft(index, num_blocks, lefts) {
 	// Return x co-ordinate of the block with the given index
 	// num_blocks - number of blocks of this type (fixed or moving)
 	// moving - true if these are the moving blocks
@@ -68,19 +68,19 @@ function getTop(index, num_blocks, tops) {
 	return block * page_height + tops[item];
 }
 
-// In this example we use this to get the page parameter from the URL.  In practice we load the same data for every page in this example. 
+// In this example we use this to get the page parameter from the URL.  In practice we load the same data for every page in this example.
 function getUrlParameter(name) {
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 }
 
-// This is faking up a json response for the sake of the example.  
+// This is faking up a json response for the sake of the example.
 // For real life usage, set the URLs for fixed and moving blocks, and don't specify a load_data_fn in the settngs for infscroll
 function fake_json(loadDown, tiles) {
 	var json_thing = '{"name" : "Tank Top Movies", "site" : "movies.tanktop.tv", "logo" : "{% static 'images/TankTopMovies.png' %}"}';
 	var json_multiple_things = Array( num_moving_blocks ).join(json_thing + ",");
 	json_multiple_things += json_thing;
 	var json_string = '{"thing" : [' + json_multiple_things + ']}';
-	var data_obj = JSON.parse(json_string); 
+	var data_obj = JSON.parse(json_string);
 	return [data_obj, "success", "some response text would go here"];
 }
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
 	$(document).on("click", '.remove', function(e){
 		e.stopPropagation();
 		console.log("Removing a block");
-		var current_block = $(this).closest(".scroll_block"); 		
+		var current_block = $(this).closest(".scroll_block");
 		var block_id = current_block.attr("id");
 
 		current_block.fadeTo('fast', 0.5, function() {
@@ -112,7 +112,7 @@ $(document).ready(function() {
     $("#loading_message").html("Loading contents...");
 
     var current_page = getUrlParameter('page');
-	console.log("Starting from page " + current_page);		
+	console.log("Starting from page " + current_page);
 
 	$(window).infscroll({
         pageHeight: page_height,
@@ -131,7 +131,7 @@ $(document).ready(function() {
 				},
 				top: function(index) {
 					return getTop(index, num_moving_blocks, moving_tops);
-				},		
+				},
 				block_index: function(index) {
 					return index;
 				}
@@ -142,7 +142,7 @@ $(document).ready(function() {
 			url: fixed_url,
         	target: "#fixed-container",
             template: "fixed-mosaic.html",
-	        jsonField: fixed_field,			
+	        jsonField: fixed_field,
 	        numberToLoad: num_fixed_blocks,
 			helpers : {
 				left: function(index) {
@@ -150,27 +150,27 @@ $(document).ready(function() {
 				},
 				top: function(index) {
 					return getTop(index, num_fixed_blocks, fixed_tops);
-				},	
+				},
 				truncate: function(main_blocks_length) {
 					return truncate[main_blocks_length];
 				}
-			},				
+			},
 			load_data_fn: fake_json, // remove this if you want to load real JSON
 		},
 		fewer_tiles : {  // in practice we don't use this in the example
-			limit : fewer_limit, 
+			limit : fewer_limit,
 			extra_class : "standard-block",
 			target : ".container",
 			helpers : {
 				left: function(index) {
-					return getLeft(index, fewer_limit, fewer_lefts); 
+					return getLeft(index, fewer_limit, fewer_lefts);
 				},
 				top: function(index) {
-					return getTop(index, fewer_limit, fewer_tops); 
+					return getTop(index, fewer_limit, fewer_tops);
 				}
 			}
 		}
 	});
-});		
-		
-</script>		
+});
+
+</script>
