@@ -107,16 +107,16 @@
                 });
             }
 
-            if (json[0] && json[0][data.settings.jsonField] && data.settings.completion) {
-                data.settings.completion(data.moving_tiles.settings.target);
-            }
-
             console.log("render complete");
-
+            data.loading = false;
             $("#loading").hide();
 
-            data.loading = false;
-            data.settings.after_loading(data.moving_tiles.maxLoaded);
+            if (!data.firstLoadComplete) {
+                data.settings.doAfterFirstLoad(data.moving_tiles.settings.target, data.moving_tiles.maxLoaded);
+                data.firstLoadComplete = true;
+            }
+
+            data.settings.doAfterEachLoad(data.moving_tiles.settings.target, data.moving_tiles.maxLoaded);
 
             if (data.setPage) {
                 data.$this.scrollTop(data.moving_tiles.minLoaded * data.settings.pageHeight / data.moving_tiles.settings.numberToLoad);
@@ -247,6 +247,7 @@
                         settings: settings,
                         loading: false,
                         loadComplete: false,
+                        firstLoadComplete: false,
                         current_height: 0,
                         loadDown: true,
                         setPage: (page !== 0),

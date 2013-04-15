@@ -42,13 +42,13 @@ var fewer_lefts = [0, 0, 0];
 var fewer_tops = [0, 0, 0];
 var truncate = [0, 2, 2];
 
-function doAfterLoading(data) {
+function do_after_each_load(data) {
 	// A function that gets called every time a page of data gets loaded
 	console.log("Data loaded");
 }
 
-function doOnCompletion(data) {
-	// A function that gets called when there is no more data left to display
+function do_after_first_load(data) {
+	// A function that gets called when the first page of data has been loaded
 	console.log("All data loaded");
 }
 
@@ -116,9 +116,9 @@ $(document).ready(function() {
 
 	$(window).infscroll({
         pageHeight: page_height,
-        completion: doOnCompletion,
         current_page: 0,
-        after_loading: doAfterLoading,
+        doAfterFirstLoad: do_after_first_load,
+        doAfterEachLoad: do_after_each_load,
 		moving_tiles : {
 			url: moving_url,
         	target: "#moving-container",
